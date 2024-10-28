@@ -49,6 +49,7 @@
 
 SELECT * FROM csv.`${DA.paths.sales_csv}`
 
+
 -- COMMAND ----------
 
 -- MAGIC %md
@@ -156,7 +157,16 @@ SELECT COUNT(*) FROM sales_csv
 
 -- COMMAND ----------
 
+-- MAGIC %md
+-- MAGIC **describe detail** <tablename> gives high level metadata like table name and storagae location
+-- MAGIC
+-- MAGIC **describe extended** <tablename> gives more detailed metadata like column names, data types, storage format, type external/managed etc.
+-- MAGIC
+
+-- COMMAND ----------
+
 DESCRIBE EXTENDED sales_csv
+--describe detail sales_csv
 
 -- COMMAND ----------
 
@@ -181,6 +191,7 @@ DESCRIBE EXTENDED sales_csv
 -- MAGIC       .write.mode("append")
 -- MAGIC       .format("csv")
 -- MAGIC       .save(DA.paths.sales_csv, header="true"))
+-- MAGIC
 
 -- COMMAND ----------
 
@@ -206,7 +217,19 @@ SELECT COUNT(*) FROM sales_csv
 
 -- COMMAND ----------
 
+-- MAGIC %md
+-- MAGIC sales_csv table simply points to an external file. When this table was created, the external file data was put in cache for Spark to return results from any queries faster. What this means is when data is changed in the external file (either more data added or deleted or updated), Spark will have no idea about the change and hence all queries on sales_csv will continue to be from the cache. In order to refresh the cache with the latest external data, we need to do **REFRESH TABLE** <tablename>
+-- MAGIC
+
+-- COMMAND ----------
+
 REFRESH TABLE sales_csv
+
+-- COMMAND ----------
+
+-- MAGIC %md
+-- MAGIC After refresh table command, the next time table is queried it might take long for the first time as there's nothing in cache and it needs to pull all data  (recent data) from external source
+-- MAGIC
 
 -- COMMAND ----------
 
@@ -278,6 +301,12 @@ SELECT * FROM users_jdbc
 -- MAGIC Looking at the table metadata reveals that we have captured the schema information from the external system.
 -- MAGIC
 -- MAGIC Storage properties (which would include the username and password associated with the connection) are automatically redacted.
+
+-- COMMAND ----------
+
+-- MAGIC %md
+-- MAGIC DESCRIBE EXTENDED <tablename> gives metadata information from which we can easily tell if the table is an external or managed, and if external what is the type and source storage location
+-- MAGIC
 
 -- COMMAND ----------
 
