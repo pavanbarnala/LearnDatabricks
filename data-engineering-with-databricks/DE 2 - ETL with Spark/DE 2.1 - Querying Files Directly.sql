@@ -140,8 +140,21 @@ SELECT * FROM json.`${DA.paths.kafka_events}`
 
 -- COMMAND ----------
 
+create or replace view 001_Json
+as 
+SELECT * FROM json.`${DA.paths.kafka_events}/001.json`
+
+
+-- COMMAND ----------
+
+select * from 001_Json
+
+-- COMMAND ----------
+
 CREATE OR REPLACE VIEW event_view
 AS SELECT * FROM json.`${DA.paths.kafka_events}`
+
+
 
 -- COMMAND ----------
 
@@ -193,10 +206,13 @@ SELECT * FROM cte_json
 -- MAGIC CTEs only alias the results of a query while that query is being planned and executed.
 -- MAGIC
 -- MAGIC As such, **the following cell with throw an error when executed**.
+-- MAGIC
+-- MAGIC OFCOURSE - Its not a physical or temp table/view to be queried from. Data is not persisted in it so it can't be queried.
+-- MAGIC  
 
 -- COMMAND ----------
 
--- SELECT COUNT(*) FROM cte_json
+SELECT COUNT(*) FROM cte_json
 
 -- COMMAND ----------
 
@@ -209,6 +225,12 @@ SELECT * FROM cte_json
 
 -- COMMAND ----------
 
+-- MAGIC %md
+-- MAGIC reading sourcefile with text. could be handy if you want to just quickly see the contents at the start of data analysis
+
+-- COMMAND ----------
+
+--SELECT * FROM json.`${DA.paths.kafka_events}`
 SELECT * FROM text.`${DA.paths.kafka_events}`
 
 -- COMMAND ----------
@@ -221,6 +243,12 @@ SELECT * FROM text.`${DA.paths.kafka_events}`
 -- MAGIC Some workflows may require working with entire files, such as when dealing with images or unstructured data. Using **`binaryFile`** to query a directory will provide file metadata alongside the binary representation of the file contents.
 -- MAGIC
 -- MAGIC Specifically, the fields created will indicate the **`path`**, **`modificationTime`**, **`length`**, and **`content`**.
+
+-- COMMAND ----------
+
+-- MAGIC %md
+-- MAGIC Note that binaryFile. does not return the data from inside the files. It simply returns the list of files along with some metadata like file size, last modified and binary representation of the file content. It could be useful if we want to store the image data and manipulate it before displaying. Example could be get the binary content of the image and then add a shade of color to it before displaying, something like that.
+-- MAGIC
 
 -- COMMAND ----------
 

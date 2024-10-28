@@ -81,6 +81,14 @@
 
 # COMMAND ----------
 
+# DBTITLE 1,Try out python format string
+myFirstName = "Pavan"
+print(f"My name is {myFirstName}")
+
+
+
+# COMMAND ----------
+
 # MAGIC %md
 # MAGIC
 # MAGIC The folder that contains this notebook contains a subfolder named **`ExampleSetupFolder`**, which in turn contains a notebook called **`example-setup`**.

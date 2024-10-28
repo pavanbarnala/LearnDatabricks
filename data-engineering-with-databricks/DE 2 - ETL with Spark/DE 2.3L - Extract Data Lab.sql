@@ -74,7 +74,42 @@
 
 -- COMMAND ----------
 
--- <FILL_IN> "${DA.paths.kafka_events}"
+drop table if exists events_json;
+create table events_json 
+as 
+select * from json.`${DA.paths.kafka_events}`
+
+-- COMMAND ----------
+
+select * from events_json
+
+-- COMMAND ----------
+
+describe extended events_json
+
+-- COMMAND ----------
+
+drop table if exists events_json;
+create table events_json 
+(
+  key    BINARY,
+  offset LONG,
+  partition INTEGER,
+  timestamp LONG,
+  topic STRING,
+  value BINARY
+)
+using json
+location "${DA.paths.kafka_events}"
+
+-- COMMAND ----------
+
+describe extended events_json
+
+
+-- COMMAND ----------
+
+select * from events_json
 
 -- COMMAND ----------
 
